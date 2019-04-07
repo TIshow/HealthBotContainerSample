@@ -27,14 +27,19 @@ app.get('/chatBot',  function(req, res) {
         res.status(403).send();
         return
     }
+    const WEBCHAT_SECRET = "oHPZThBuRwk.lD9MCeqS4AWBq2Af-exnZPvxb9y8Q61aU1SVe1_1MhQ"
+
     const options = {
         method: 'POST',
         uri: 'https://directline.botframework.com/v3/directline/tokens/generate',
         headers: {
-            'Authorization': 'Bearer ' + process.env.WEBCHAT_SECRET
+            'Authorization': 'Bearer ' + WEBCHAT_SECRET
         },
         json: true
     };
+
+    const APP_SECRET = "pbyaestrt4racer7cjucihjgldwsge"
+
     rp(options)
         .then(function (parsedBody) {
             var userid = req.query.userId || req.cookies.userid;
@@ -52,7 +57,7 @@ app.get('/chatBot',  function(req, res) {
                 response['location'] = {lat: req.query.lat, long: req.query.long};
             }
             response['directLineURI'] = process.env.DIRECTLINE_ENDPOINT_URI;
-            const jwtToken = jwt.sign(response, process.env.APP_SECRET);
+            const jwtToken = jwt.sign(response, APP_SECRET);
             res.send(jwtToken);
         })
         .catch(function (err) {
